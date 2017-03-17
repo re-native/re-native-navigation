@@ -1,4 +1,4 @@
-(defproject re-native/navigation "1.0.0-beta.7"
+(defproject re-native/navigation "0.0.1-SNAPSHOT"
   :dependencies [[org.clojure/clojure "1.9.0-alpha10"]
                  [org.clojure/clojurescript "1.9.473"]
                  [reagent "0.6.0" :exclusions [cljsjs/react cljsjs/react-dom cljsjs/react-dom-server]]
