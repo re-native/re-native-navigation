@@ -6,3 +6,10 @@ Meant for use with reagent and re-frame
 Tracking       | Artifact
 ---------------|---------|
 `1.0.0-beta.7` | `[re-native/navigation "0.0.1-SNAPSHOT"]`
+
+In your re-natal project:
+
+```
+npm i react-navigation@1.0.0-beta.7 --save
+re-natal use-component react-navigation
+```
