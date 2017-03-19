@@ -86,3 +86,67 @@
 (assert reset)
 (assert setParams)
 (assert uri)
+
+  ;; navigator
+(defn make-stack-navigator [route-configs navigator-config] (r/adapt-react-class (StackNavigator (clj->js route-configs) (clj->js navigator-config))))
+(defn add-navigation-helpers [dispatch-fn nav-state]
+  (addNavigationHelpers
+    (clj->js
+      {"dispatch" (fn add-navigation-helpers-dispatch [a]
+                    (dispatch-fn a))
+       "state"    (clj->js nav-state)})))
+
+(defn make-drawer-navigator [drawer-router drawer-navigator-config]
+  (DrawerNavigator (clj->js drawer-router) (clj->js drawer-navigator-config)))
+
+(defn navigator-state-for-action [navigator action]
+  (getStateForAction (getRouter navigator) action))
+
+(defn navigator-action-for-path-and-params [navigator path params]
+  (getActionForPathAndParams (getRouter navigator) path params))
+
+(defn navigator-path-and-params-for-state [navigator state]
+  (getPathAndParamsForState (getRouter navigator) state))
+
+(defn navigator-component-for-state [navigator state]
+  (getComponentForState (getRouter navigator) state))
+
+(defn navigator-component-for-route-name [navigator route-name]
+  (getComponentForRouteName (getRouter navigator) route-name))
+
+(defn navigation-actions-back [] (back))
+(defn navigation-actions-init [] (init))
+(defn navigation-actions-navigate [a] (navigate a))
+(defn navigation-actions-reset [] (reset))
+(defn navigation-actions-setParams [] (setParams))
+(defn navigation-actions-uri [] (uri))
+
+(defn navigation->state [navigation]
+  (-> navigation .-state (js->clj :keywordize-keys true)))
+
+(defn wrap-navigation [component {:keys [title
+                                         left
+                                         right
+                                         background-color]
+                                  :or {title (fn wrap-navigation-title-fn [a b] (str "title" a))
+                                       left nil
+                                       right nil
+                                       background-color "#61B2E9"}}]
+  (let [c (r/reactify-component
+            (fn wrap-navigation-r [{:keys [navigation]}]
+              [component (navigation->state navigation)]))]
+    (aset c "navigationOptions"
+          (clj->js {:title (fn wrap-navigation-title-fn [navigation]
+                             (let [state (navigation->state navigation)
+                                   {:keys [params routeName]} state]
+                                 (if title (title state) nil)))
+                    :header (fn wrap-navigation-header-fn [navigation]
+                              (clj->js
+                                (merge
+                                 {:tintColor "#FFF"
+                                  :titleStyle {:color "#FFF"
+                                               :marginLeft 30}
+                                  :style {:backgroundColor background-color}}
+                                 (if left {:left (left (navigation->state navigation))} {})
+                                 (if right {:right (right (navigation->state navigation))} {}))))}))
+    c))
