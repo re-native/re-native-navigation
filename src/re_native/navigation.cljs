@@ -99,6 +99,9 @@
 (defn make-drawer-navigator [drawer-router drawer-navigator-config]
   (DrawerNavigator (clj->js drawer-router) (clj->js drawer-navigator-config)))
 
+(defn make-tab-navigator [tab-router tab-navigator-config]
+  (TabNavigator (clj->js tab-router) (clj->js tab-navigator-config)))
+
 (defn navigator-state-for-action [navigator action]
   (getStateForAction (getRouter navigator) action))
 
@@ -127,16 +130,26 @@
 (defn wrap-navigation [component {:keys [title
                                          left
                                          right
+                                         tab-label
+                                         tab-icon
                                          background-color]
                                   :or {title (fn wrap-navigation-title-fn [a b] (str "title" a))
                                        left nil
                                        right nil
+                                       tab-label nil
+                                       tab-icon nil
                                        background-color "#61B2E9"}}]
   (let [c (r/reactify-component
             (fn wrap-navigation-r [{:keys [navigation]}]
               [component (navigation->state navigation)]))]
     (aset c "navigationOptions"
-          (clj->js {:title (fn wrap-navigation-title-fn [navigation]
+          (clj->js {
+                    ; :tabBar (fn wrap-navigation-tab-bar-fn [navigation]
+                    ;           (let [state (navigation->state navigation)]
+                    ;            (clj->js
+                    ;              {:label (if tab-label (tab-label state) "-EMPTY-")})))
+                    ;               ;:icon (if tab-icon (tab-icon state) nil)})))
+                    :title (fn wrap-navigation-title-fn [navigation]
                              (let [state (navigation->state navigation)
                                    {:keys [params routeName]} state]
                                  (if title (title state) nil)))
