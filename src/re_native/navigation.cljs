@@ -142,21 +142,18 @@
               [component (navigation->state navigation)]))]
     (aset c "navigationOptions"
           (fn wrap-navigation-fn [navigation]
-            (clj->js {
-                      ; :tabBar (fn wrap-navigation-tab-bar-fn [navigation]
-                      ;           (let [state (navigation->state navigation)]
-                      ;            (clj->js
-                      ;              {:label (if tab-label (tab-label state) "-EMPTY-")})))
-                      ;               ;:icon (if tab-icon (tab-icon state) nil)})))
-                      :title   (let [state (navigation->state navigation)
-                                     {:keys [params routeName]} state]
-                                   (if title (title state) nil))
-                      :header   (clj->js
-                                  (merge
-                                   {:tintColor "#FFF"
-                                    :titleStyle {:color "#FFF"
-                                                 :marginLeft 30}
-                                    :style {:backgroundColor background-color}}
-                                   (if left {:left (left (navigation->state navigation))} {})
-                                   (if right {:right (right (navigation->state navigation))} {})))})))
+            (clj->js (merge {; :tabBar (fn wrap-navigation-tab-bar-fn [navigation]
+                             ;           (let [state (navigation->state navigation)]
+                             ;            (clj->js
+                             ;              {:label (if tab-label (tab-label state) "-EMPTY-")})))
+                             ;               ;:icon (if tab-icon (tab-icon state) nil)})))
+                             :title   (let [state (navigation->state navigation)
+                                            {:keys [params routeName]} state]
+                                          (if title (title state) nil))
+                             :headerTintColor "#FFF"
+                             :headerTitleStyle {:color "#FFF"
+                                                :marginLeft 30}
+                             :headerStyle {:backgroundColor background-color}}
+                            (if left {:headerLeft (left (navigation->state navigation))} {})
+                            (if right {:headerRight (right (navigation->state navigation))} {})))))
     c))
