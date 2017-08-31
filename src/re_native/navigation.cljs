@@ -7,7 +7,6 @@
 ; Core
 (def createNavigationContainer (.-createNavigationContainer react-navigation))
 (def StateUtils                (.-StateUtils react-navigation))
-(def PropTypes                 (.-PropTypes react-navigation))
 (def addNavigationHelpers      (.-addNavigationHelpers react-navigation))
 (def NavigationActions         (.-NavigationActions react-navigation))
 
@@ -61,7 +60,6 @@
 (assert react-navigation)
 (assert createNavigationContainer)
 (assert StateUtils)
-(assert PropTypes)
 (assert addNavigationHelpers)
 (assert NavigationActions)
 (assert createNavigator)
